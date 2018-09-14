@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'storages',
+    'shop',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +57,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,7 +84,10 @@ DATABASES = {
         'NAME': 'onlineshop',
         'USER': '',
         'PASSWORD': '',
-        'HOST': 'django-onlineshop.c1kscdrp94gz.ap-northeast-2.rds.amazonaws.com',
+        'HOST': '',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
 
@@ -129,12 +134,20 @@ AWS_SECRET_ACCESS_KEY = ''
 
 AWS_REGION = 'ap-northeast-2'
 AWS_STORAGE_BUCKET_NAME = 'omega-django-onlineshop'
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
-AWS_S3_OBJECT_PARAMETERS = { 'CacheControl':'max-age=86400', }
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (
+    AWS_STORAGE_BUCKET_NAME, AWS_REGION)
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400', }
 
 AWS_LOCATION = 'static'
 STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'static')
+]
+
 # media
 DEFAULT_FILE_STORAGE = 'mysite.asset_storage.MediaStorage'
+
+
+CART_SESSION_ID = 'cart_id'
